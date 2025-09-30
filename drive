@@ -1,0 +1,23 @@
+server {
+    listen 443 ssl;
+    server_name drive.insan.qzz.io;
+    client_max_body_size 30G;
+    location / {
+        proxy_read_timeout 86400;
+        proxy_pass http://localhost:1221;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-for $remote_addr;
+        proxy_set_header X-Forwarded-Proto http;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+    }
+
+    ssl_certificate     /etc/ssl/certs/cf-cert.pem;
+    ssl_certificate_key /etc/ssl/private/cf-key.pem;
+
+    error_log  /var/log/nginx/drive_error.log;
+    access_log /var/log/nginx/drive_access.log;
+}
+

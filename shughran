@@ -1,0 +1,29 @@
+server {
+    listen 443 ssl;
+    server_name shughran.dcsit.qzz.io;
+
+    root /var/www/shughran;
+    index index.php index.html index.htm;
+
+    ssl_certificate     /etc/ssl/certs/cf-cert.pem;
+    ssl_certificate_key /etc/ssl/private/cf-key.pem;
+
+    error_log  /var/log/nginx/shughran_error.log;
+    access_log /var/log/nginx/shughran_access.log;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ \.php$ {
+        fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+
+    location ~ /\.ht {
+        deny all;
+    }
+}
+

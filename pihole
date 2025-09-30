@@ -1,0 +1,25 @@
+server {
+    listen 443 ssl;
+    server_name pi.insan.qzz.io;
+
+    root /var/www/html;
+    index index.php index.html index.lp;
+
+    location /admin/ {
+        index index.php *.*;
+        try_files $uri $uri/ =404;
+
+        location ~ \.php$ {
+            include snippets/fastcgi-php.conf;
+            fastcgi_pass unix:/var/run/php/php8.2-fpm.sock; # match your PHP version
+        }
+    }
+
+    location / {
+        return 404;
+    }
+    ssl_certificate     /etc/ssl/certs/cf-cert.pem;
+    ssl_certificate_key /etc/ssl/private/cf-key.pem;
+    error_log  /var/log/nginx/pihole_error.log;
+    access_log /var/log/nginx/pihole_access.log;
+}
